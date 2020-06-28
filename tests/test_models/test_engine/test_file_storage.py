@@ -169,7 +169,7 @@ class TestAmenityFileStorage(unittest.TestCase):
         self.assertIn('Amenity.{}'.format(self.test.id), self.objects.keys())
 
     def test_amenity_dict(self):
-        """ Check amenity dicttionary function """
+        """ Check amenity dictionary function """
         dictionary = self.test.to_dict()
         self.assertIn(dictionary, self.objects.values())
 

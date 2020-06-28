@@ -6,6 +6,12 @@ All the content of the FileStorage class
 
 import json
 from models.base_model import BaseModel
+from models.user import User
+from models.place import Place
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.review import Review
 
 
 class FileStorage:
@@ -24,11 +30,11 @@ class FileStorage:
 
     def save(self):
         """serializes __objects to the JSON file (path: __file_path)"""
-        serialize = {}
-        for key in self.__objects:
-            serialize[key] = self.__objects[key].to_dict()
+        for key, value in self.__objects.items():
+            if not isinstance(value, dict):
+                self.__objects[key] = value.to_dict()
         with open(self.__file_path, "w") as f:
-            json.dump(serialize, f)
+            json.dump(self.__objects, f)
 
     def reload(self):
         """deserializes the JSON file to __objects (only if the JSON file
@@ -40,3 +46,4 @@ class FileStorage:
                 self.__objects[key] = BaseModel(**value)
         except:
             pass
+  

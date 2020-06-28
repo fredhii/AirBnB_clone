@@ -17,14 +17,14 @@ class BaseModel:
     def __init__(self, *args, **kwargs):
         """Initialize the class object"""
         if kwargs:
-            if "id" in kwargs:
-                self.id = kwargs["id"]
-            if "created_at" in kwargs:
-                self.created_at = datetime.strptime(kwargs["created_at"],
-                                                    formatedTime)
-            if "updated_at" in kwargs:
-                self.updated_at = datetime.strptime(kwargs["updated_at"],
-                                                    formatedTime)
+            for key, value in kwargs.items():
+                if key == '__class__':
+                    continue
+                elif key == 'updated_at' or key == 'created_at':
+                    self.__dict__[key] = datetime.strptime(value,
+                                                           formatedTime)
+                else:
+                    self.__dict__[key] = value
         else:
             self.id = str(uuid.uuid4())
             self.created_at = datetime.now()
@@ -33,15 +33,15 @@ class BaseModel:
 
     def __str__(self):
         """String representation of the baseModel"""
-        return "[{}] ({}) {}".format(self.__class__.__name__, self.id,
-                                    self.__dict__)
+        return "[{}] ({}) {}".format(self.__class__.__name__,
+                                     self.id,
+                                     self.__dict__)
 
     def save(self):
         """updates the public instance attribute updated_at with the current
         datetime"""
         self.updated_at = datetime.now()
         models.storage.save()
-
 
     def to_dict(self):
         """returns a dictionary containing all keys/values of __dict__ of the
