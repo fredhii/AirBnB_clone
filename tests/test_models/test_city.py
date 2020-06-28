@@ -1,21 +1,9 @@
 #!/usr/bin/python3
 """ City Model Unit Test """
 import unittest
-import pep8
 from datetime import datetime
 from models.base_model import BaseModel
 from models.city import City
-
-
-class TestDocumentation(unittest.TestCase):
-    """ Check pep8 """
-    def test_pep8(self):
-        pep8style = pep8.StyleGuide(quiet=True)
-        f1 = 'models/city.py'
-        f2 = 'tests/test_models/test_city.py'
-        result = pep8style.check_files([f1, f2])
-        self.assertEqual(result.total_errors, 0,
-                         "Found code style errors (and warnings).")
 
 
 class TestCityModel(unittest.TestCase):

@@ -1,20 +1,8 @@
 #!/usr/bin/python3
 """ Base Model Unit Test """
 import unittest
-import pep8
 from datetime import datetime
 from models.base_model import BaseModel
-
-
-class TestDocumentationMethods(unittest.TestCase):
-    """ Check pep8 """
-    def test_pep8(self):
-        pep8style = pep8.StyleGuide(quiet=True)
-        f_Base = 'models/base_model.py'
-        f_Test_Base = 'tests/test_models/test_base_model.py'
-        result = pep8style.check_files([f_Base, f_Test_Base])
-        self.assertEqual(result.total_errors, 0,
-                         "Found code style errors (and warnings).")
 
 
 class TestBaseFunctionality(unittest.TestCase):
@@ -24,7 +12,7 @@ class TestBaseFunctionality(unittest.TestCase):
         self.test = BaseModel()
 
     def tearDown(self):
-        """ Deletes instance after a test """
+        """ Deletes instance after a test is finished """
         del self.test
 
     def test_id_type(self):
@@ -36,11 +24,11 @@ class TestBaseFunctionality(unittest.TestCase):
         test2 = BaseModel()
         self.assertNotEqual(self.test.id, test2.id)
 
-    def test_created_at_type(self):
+    def test_creationat_type(self):
         """ Check created_at type """
         self.assertEqual(type(self.test.created_at), datetime)
 
-    def test_updated_at_type(self):
+    def test_updatedat_type(self):
         """ Check updated_at type """
         self.assertEqual(type(self.test.updated_at), datetime)
 

@@ -1,21 +1,9 @@
 #!/usr/bin/python3
 """ Review Model Unit Test """
 import unittest
-import pep8
 from datetime import datetime
 from models.base_model import BaseModel
 from models.review import Review
-
-
-class TestDocumentation(unittest.TestCase):
-    """ Check pep8 """
-    def test_pep8(self):
-        pep8style = pep8.StyleGuide(quiet=True)
-        f1 = 'models/review.py'
-        f2 = 'tests/test_models/test_review.py'
-        result = pep8style.check_files([f1, f2])
-        self.assertEqual(result.total_errors, 0,
-                         "Found code style errors (and warnings).")
 
 
 class TestReviewModel(unittest.TestCase):

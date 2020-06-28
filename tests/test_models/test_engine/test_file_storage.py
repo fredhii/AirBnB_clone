@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 """ File Storage Unit Test """
 import unittest
-import pep8
 import models
 from models import storage
 from models.base_model import BaseModel
@@ -12,17 +11,6 @@ from models.user import User
 from models.place import Place
 from models.review import Review
 from models.engine.file_storage import FileStorage
-
-
-class TestDocumentation(unittest.TestCase):
-    """ Check pep8 """
-    def test_pep8(self):
-        pep8style = pep8.StyleGuide(quiet=True)
-        f1 = 'models/engine/file_storage.py'
-        f2 = 'tests/test_models/test_engine/test_file_storage.py'
-        result = pep8style.check_files([f1, f2])
-        self.assertEqual(result.total_errors, 0,
-                         "Found code style errors (and warnings).")
 
 
 class TestFileStorageMethod(unittest.TestCase):
