@@ -6,7 +6,6 @@ Contains the hbnb command interpreter
 
 import cmd
 import models
-import sys
 import shlex  # To parse lexicon correctly
 from models import storage
 from models.base_model import BaseModel
@@ -54,6 +53,7 @@ prints the id."""
     def do_show(self, argum):
         """Prints the string representation of an instance based on the class
 name and id."""
+        models.storage.reload()
         if len(argum) == 0:
             print("** class name missing **")
             return
@@ -99,6 +99,7 @@ name and id."""
 
     def do_all(self, argum):
         """ Display all instances based on class name """
+        models.storage.reload()
         if len(argum) < 1:
             ac = []
             for value in models.storage.all().values():
@@ -121,12 +122,16 @@ name and id."""
 
     def do_update(self, argum):
         """ update an instance based on its UUID """
+        models.storage.reload()
         if len(argum) == 0:
             print("** class name missing **")
             return
         else:
             ac = shlex.split(argum)
             if ac[0] not in HBNBCommand.classes:
+                print("** class doesn't exist **")
+                return
+            if ac[0] in HBNBCommand.classes and len(ac) < 2:
                 print("** instance id missing **")
                 return
             tmp = ac[0] + '.' + ac[1]
