@@ -20,16 +20,16 @@ class FileStorage:
     __objects = {}
 
     def all(self):
-        """returns the dictionary __objects"""
+        """Returns the dictionary __objects"""
         return self.__objects
 
     def new(self, obj):
-        """sets in __objects the obj with key <obj class name>.id"""
+        """Sets in __objects the obj with key <obj class name>.id"""
         key = obj.__class__.__name__ + "." + obj.id
         self.__objects[key] = obj
 
     def save(self):
-        """serializes __objects to the JSON file (path: __file_path)"""
+        """Serializes __objects to the JSON file (path: __file_path)"""
         for key, value in self.__objects.items():
             if not isinstance(value, dict):
                 self.__objects[key] = value.to_dict()
@@ -37,8 +37,8 @@ class FileStorage:
             json.dump(self.__objects, f)
 
     def reload(self):
-        """deserializes the JSON file to __objects (only if the JSON file
-(__file_path) exists"""
+        """Deserializes the JSON file to __objects (only if the JSON file
+        (__file_path) exists"""
         try:
             with open(self.__file_path, "r") as f:
                 file_object = json.load(f)
