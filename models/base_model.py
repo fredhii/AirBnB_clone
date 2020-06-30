@@ -3,7 +3,6 @@
 Here is the class BaseModel
 """
 
-
 from datetime import datetime
 import uuid
 import models
