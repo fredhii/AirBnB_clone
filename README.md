@@ -34,8 +34,8 @@
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
 ## Authors
-Miguel Cipamocha - [Github](https://github.com/MiguelCF06)
-Fredy Acuña - [Github](https://github.com/fredhii)
+* Miguel Cipamocha - [Github](https://github.com/MiguelCF06)
+* Fredy Acuña - [Github](https://github.com/fredhii)
 
 
 [contributors-shield]: https://img.shields.io/github/contributors/MiguelCF06/AirBnB_clone?style=flat-square
