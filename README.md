@@ -18,6 +18,11 @@
   </p>
 </p>
 
+### Functionalities of the Command Line Interpreter
+* Create a new object (Could be: a new User or a new Place)
+* Update attributes of an object
+* Destroy an object
+* Retrieve an object from a file
 
 ### Usage
 ```sh
@@ -28,6 +33,9 @@
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
+## Authors
+Miguel Cipamocha - [Github](https://github.com/MiguelCF06)
+Fredy Acuña - [Github](https://github.com/fredhii)
 
 
 [contributors-shield]: https://img.shields.io/github/contributors/MiguelCF06/AirBnB_clone?style=flat-square
