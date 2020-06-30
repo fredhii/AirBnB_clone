@@ -16,6 +16,7 @@ from models.review import Review
 
 class FileStorage:
     """The filestorage class"""
+    
     __file_path = "file.json"
     __objects = {}
 
@@ -37,8 +38,7 @@ class FileStorage:
             json.dump(self.__objects, f)
 
     def reload(self):
-        """Deserializes the JSON file to __objects (only if the JSON file
-(__file_path) exists"""
+        """Deserializes the JSON file to __objects"""
         try:
             with open(self.__file_path, "r") as f:
                 file_object = json.load(f)
