@@ -47,4 +47,3 @@ class FileStorage:
                 self.__objects[key] = kwav
         except:
             pass
-  
