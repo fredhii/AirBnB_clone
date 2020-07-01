@@ -1,102 +1,73 @@
 #!/usr/bin/python3
-"""Unittest for class Review
-"""
+"""test for review"""
 import unittest
-from datetime import datetime
-from models.base_model import BaseModel
+import os
 from models.review import Review
+from models.base_model import BaseModel
+import pep8
 
 
 class TestReview(unittest.TestCase):
-    """Testing Review"""
-    def setUp(self):
-        """
-        Create a new instance of Review before each test
-        """
-        self.r1 = Review()
+    """this will test the place class"""
+
+    @classmethod
+    def setUpClass(cls):
+        """set up for test"""
+        cls.rev = Review()
+        cls.rev.place_id = "4321-dcba"
+        cls.rev.user_id = "123-bca"
+        cls.rev.text = "The srongest in the Galaxy"
+
+    @classmethod
+    def teardown(cls):
+        """at the end of the test this will tear it down"""
+        del cls.rev
 
     def tearDown(self):
-        """
-        Delete Review instance before next test
-        """
-        del self.r1
+        """teardown"""
+        try:
+            os.remove("file.json")
+        except Exception:
+            pass
 
-    def test_uniqueUUID(self):
-        """
-        Make sure each UUID is unique
-        """
-        r2 = Review()
-        self.assertNotEqual(self.r1.id, r2.id)
+    def test_pep8_Review(self):
+        """Tests pep8 style"""
+        style = pep8.StyleGuide(quiet=True)
+        p = style.check_files(['models/review.py'])
+        self.assertEqual(p.total_errors, 0, "fix pep8")
 
-    def test_id_type(self):
-        """
-        Make sure id is a string not uuid data type
-        """
-        self.assertEqual(type(self.r1.id), str)
+    def test_checking_for_docstring_Review(self):
+        """checking for docstrings"""
+        self.assertIsNotNone(Review.__doc__)
 
-    def test_created_at_type(self):
-        """
-        Make sure created_at is datetime data type
-        """
-        self.assertEqual(type(self.r1.created_at), datetime)
+    def test_attributes_review(self):
+        """chekcing if review have attributes"""
+        self.assertTrue('id' in self.rev.__dict__)
+        self.assertTrue('created_at' in self.rev.__dict__)
+        self.assertTrue('updated_at' in self.rev.__dict__)
+        self.assertTrue('place_id' in self.rev.__dict__)
+        self.assertTrue('text' in self.rev.__dict__)
+        self.assertTrue('user_id' in self.rev.__dict__)
 
-    def test_updated_at_type(self):
-        """
-        Make sure updated_at is datetime data type
-        """
-        self.assertEqual(type(self.r1.updated_at), datetime)
+    def test_is_subclass_Review(self):
+        """test if review is subclass of BaseModel"""
+        self.assertTrue(issubclass(self.rev.__class__, BaseModel), True)
 
-    def test_place_id(self):
-        """
-        Make sure place_id is str data type
-        """
-        self.assertEqual(type(Review.place_id), str)
+    def test_attribute_types_Review(self):
+        """test attribute type for Review"""
+        self.assertEqual(type(self.rev.text), str)
+        self.assertEqual(type(self.rev.place_id), str)
+        self.assertEqual(type(self.rev.user_id), str)
 
-    def test_user_id(self):
-        """
-        Make sure user_id is str data type
-        """
-        self.assertEqual(type(Review.user_id), str)
+    def test_save_Review(self):
+        """test if the save works"""
+        self.rev.save()
+        self.assertNotEqual(self.rev.created_at, self.rev.updated_at)
 
-    def test_text(self):
-        """
-        Make sure text is str data type
-        """
-        self.assertEqual(type(Review.text), str)
+    def test_to_dict_Review(self):
+        """test if dictionary works"""
+        self.assertEqual('to_dict' in dir(self.rev), True)
 
-    def test_save(self):
-        """
-        Make sure save does update the updated_at attribute
-        """
-        old_updated_at = self.r1.updated_at
-        self.r1.save()
-        self.assertNotEqual(old_updated_at, self.r1.updated_at)
 
-    def test_str(self):
-        """
-        Testing return of __str__
-        """
-        self.assertEqual(str(self.r1), "[Review] ({}) {}".
-                         format(self.r1.id, self.r1.__dict__))
-
-    def test_to_dict(self):
-        """
-        Make sure to_dict returns the right dictionary
-        and the dict has the right attributes with the right types.
-        """
-        model_json = self.r1.to_dict()
-        self.assertEqual(type(model_json), dict)
-        self.assertTrue(hasattr(model_json, '__class__'))
-        self.assertEqual(type(model_json['created_at']), str)
-        self.assertEqual(type(model_json['updated_at']), str)
-
-    def test_kwargs(self):
-        """
-        Test passing kwargs to Review instantation
-        """
-        json_dict = self.r1.to_dict()
-        r2 = Review(**json_dict)
-        self.assertEqual(self.r1.id, r2.id)
-        self.assertEqual(self.r1.created_at, r2.created_at)
-        self.assertEqual(self.r1.updated_at, r2.updated_at)
-        self.assertNotEqual(self.r1, r2)
+if __name__ == "__main__":
+    unittest.main()

@@ -1,150 +1,97 @@
 #!/usr/bin/python3
-"""Unittest for class Place
-"""
+"""test for place"""
 import unittest
-from datetime import datetime
-from models.base_model import BaseModel
+import os
 from models.place import Place
+from models.base_model import BaseModel
+import pep8
 
 
 class TestPlace(unittest.TestCase):
-    """Testing Place"""
-    def setUp(self):
-        """
-        Create a new instance of Place before each test
-        """
-        self.p1 = Place()
+    """this will test the place class"""
+
+    @classmethod
+    def setUpClass(cls):
+        """set up for test"""
+        cls.place = Place()
+        cls.place.city_id = "1234-abcd"
+        cls.place.user_id = "4321-dcba"
+        cls.place.name = "Death Star"
+        cls.place.description = "UNLIMITED POWER!!!!!"
+        cls.place.number_rooms = 1000000
+        cls.place.number_bathrooms = 1
+        cls.place.max_guest = 607360
+        cls.place.price_by_night = 10
+        cls.place.latitude = 160.0
+        cls.place.longitude = 120.0
+        cls.place.amenity_ids = ["1324-lksdjkl"]
+
+    @classmethod
+    def teardown(cls):
+        """at the end of the test this will tear it down"""
+        del cls.place
 
     def tearDown(self):
-        """
-        Delete Place instance before next test
-        """
-        del self.p1
+        """teardown"""
+        try:
+            os.remove("file.json")
+        except Exception:
+            pass
 
-    def test_uniqueUUID(self):
-        """
-        Make sure each UUID is unique
-        """
-        p2 = Place()
-        self.assertNotEqual(self.p1.id, p2.id)
+    def test_pep8_Place(self):
+        """Tests pep8 style"""
+        style = pep8.StyleGuide(quiet=True)
+        p = style.check_files(['models/place.py'])
+        self.assertEqual(p.total_errors, 0, "fix pep8")
 
-    def test_id_type(self):
-        """
-        Make sure id is a string not uuid data type
-        """
-        self.assertEqual(type(self.p1.id), str)
+    def test_checking_for_docstring_Place(self):
+        """checking for docstrings"""
+        self.assertIsNotNone(Place.__doc__)
 
-    def test_created_at_type(self):
-        """
-        Make sure created_at is datetime data type
-        """
-        self.assertEqual(type(self.p1.created_at), datetime)
+    def test_attributes_Place(self):
+        """chekcing if amenity have attributes"""
+        self.assertTrue('id' in self.place.__dict__)
+        self.assertTrue('created_at' in self.place.__dict__)
+        self.assertTrue('updated_at' in self.place.__dict__)
+        self.assertTrue('city_id' in self.place.__dict__)
+        self.assertTrue('user_id' in self.place.__dict__)
+        self.assertTrue('name' in self.place.__dict__)
+        self.assertTrue('description' in self.place.__dict__)
+        self.assertTrue('number_rooms' in self.place.__dict__)
+        self.assertTrue('number_bathrooms' in self.place.__dict__)
+        self.assertTrue('max_guest' in self.place.__dict__)
+        self.assertTrue('price_by_night' in self.place.__dict__)
+        self.assertTrue('latitude' in self.place.__dict__)
+        self.assertTrue('longitude' in self.place.__dict__)
+        self.assertTrue('amenity_ids' in self.place.__dict__)
 
-    def test_updated_at_type(self):
-        """
-        Make sure updated_at is datetime data type
-        """
-        self.assertEqual(type(self.p1.updated_at), datetime)
+    def test_is_subclass_Place(self):
+        """test if Place is subclass of Basemodel"""
+        self.assertTrue(issubclass(self.place.__class__, BaseModel), True)
 
-    def test_name_type(self):
-        """
-        Make sure name is str data type
-        """
-        self.assertEqual(type(Place.name), str)
+    def test_attribute_types_Place(self):
+        """test attribute type for Place"""
+        self.assertEqual(type(self.place.city_id), str)
+        self.assertEqual(type(self.place.user_id), str)
+        self.assertEqual(type(self.place.name), str)
+        self.assertEqual(type(self.place.description), str)
+        self.assertEqual(type(self.place.number_rooms), int)
+        self.assertEqual(type(self.place.number_bathrooms), int)
+        self.assertEqual(type(self.place.max_guest), int)
+        self.assertEqual(type(self.place.price_by_night), int)
+        self.assertEqual(type(self.place.latitude), float)
+        self.assertEqual(type(self.place.longitude), float)
+        self.assertEqual(type(self.place.amenity_ids), list)
 
-    def test_city_id(self):
-        """
-        Make sure city_id is str data type
-        """
-        self.assertEqual(type(Place.city_id), str)
+    def test_save_Place(self):
+        """test if the save works"""
+        self.place.save()
+        self.assertNotEqual(self.place.created_at, self.place.updated_at)
 
-    def test_user_id(self):
-        """
-        Make sure user_id is str data type
-        """
-        self.assertEqual(type(Place.user_id), str)
+    def test_to_dict_Place(self):
+        """test if dictionary works"""
+        self.assertEqual('to_dict' in dir(self.place), True)
 
-    def test_description(self):
-        """
-        Make sure description is str data type
-        """
-        self.assertEqual(type(Place.description), str)
 
-    def test_number_rooms(self):
-        """
-        Make sure number_rooms is int data type
-        """
-        self.assertEqual(type(Place.number_rooms), int)
-
-    def test_number_bathrooms(self):
-        """
-        Make sure number_bathrooms is int data type
-        """
-        self.assertEqual(type(Place.number_bathrooms), int)
-
-    def test_max_guest(self):
-        """
-        Make sure max_guest is int data type
-        """
-        self.assertEqual(type(Place.max_guest), int)
-
-    def test_price_by_night(self):
-        """
-        Make sure price_by_night is int data type
-        """
-        self.assertEqual(type(Place.price_by_night), int)
-
-    def test_latitutde(self):
-        """
-        Make sure latitude is float
-        """
-        self.assertEqual(type(Place.latitude), float)
-
-    def test_longitude(self):
-        """
-        Make sure longitude is float
-        """
-        self.assertEqual(type(Place.longitude), float)
-
-    def test_amenity_ids(self):
-        """
-        Make sure amenity_ids is a list
-        """
-        self.assertEqual(type(Place.amenity_ids), list)
-
-    def test_save(self):
-        """
-        Make sure save does update the updated_at attribute
-        """
-        old_updated_at = self.p1.updated_at
-        self.p1.save()
-        self.assertNotEqual(old_updated_at, self.p1.updated_at)
-
-    def test_str(self):
-        """
-        Testing return of __str__
-        """
-        self.assertEqual(str(self.p1), "[Place] ({}) {}".
-                         format(self.p1.id, self.p1.__dict__))
-
-    def test_to_dict(self):
-        """
-        Make sure to_dict returns the right dictionary
-        and the dict has the right attributes with the right types.
-        """
-        model_json = self.p1.to_dict()
-        self.assertEqual(type(model_json), dict)
-        self.assertTrue(hasattr(model_json, '__class__'))
-        self.assertEqual(type(model_json['created_at']), str)
-        self.assertEqual(type(model_json['updated_at']), str)
-
-    def test_kwargs(self):
-        """
-        Test passing kwargs to Place instantation
-        """
-        json_dict = self.p1.to_dict()
-        p2 = Place(**json_dict)
-        self.assertEqual(self.p1.id, p2.id)
-        self.assertEqual(self.p1.created_at, p2.created_at)
-        self.assertEqual(self.p1.updated_at, p2.updated_at)
-        self.assertNotEqual(self.p1, p2)
+if __name__ == "__main__":
+    unittest.main()
