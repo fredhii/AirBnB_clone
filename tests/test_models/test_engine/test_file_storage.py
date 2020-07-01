@@ -1,224 +1,255 @@
 #!/usr/bin/python3
-""" File Storage Unit Test """
+""" FileStorage Unit Test """
 import unittest
 import models
+import pep8
+import os
 from models import storage
 from models.base_model import BaseModel
-from models.amenity import Amenity
+from models.user import User
 from models.state import State
 from models.city import City
-from models.user import User
+from models.amenity import Amenity
 from models.place import Place
 from models.review import Review
 from models.engine.file_storage import FileStorage
 
 
-class TestFileStorageMethod(unittest.TestCase):
-    """ Test file storage """
-    def setUp(self):
+class TestFileStorageDocumentation(unittest.TestCase):
+    """ Test FileStorage Documentation """
+
+    @classmethod
+    def setUpClass(cls):
         """ Creates an instance before each test """
-        self.file_path = FileStorage._FileStorage__file_path
-        self.objects = FileStorage._FileStorage__objects
+        cls.user = User()
+        cls.user.first_name = "Test"
+        cls.user.last_name = "unit"
+        cls.user.email = "123@test.com"
+        cls.storage = FileStorage()
+
+    @classmethod
+    def teardown(cls):
+        """ Deletes instance after test """
+        del cls.user
 
     def tearDown(self):
-        """ Deletes instance after test """
-        del self.file_path
-        del self.objects
+        """ Deletes file after test """
+        try:
+            os.remove("file.json")
+        except Exception:
+            pass
 
-    def test_objects_type(self):
-        """ Test private variable type """
+    def test_pep8_FileStorage(self):
+        """ Tests pep8 """
+        style = pep8.StyleGuide(quiet=True)
+        p = style.check_files(['models/engine/file_storage.py'])
+        self.assertEqual(p.total_errors, 0, "fix pep8")
+
+    def test_all(self):
+        """ tests all FileStorage function """
+        storage = FileStorage()
+        obj = storage.all()
+        self.assertIsNotNone(obj)
+        self.assertEqual(type(obj), dict)
+        self.assertIs(obj, storage._FileStorage__objects)
+
+    def test_new(self):
+        """ Test new FileStorage function """
+        storage = FileStorage()
+        obj = storage.all()
+        user = User()
+        user.id = 1234567
+        user.name = "Test"
+        storage.new(user)
+        key = user.__class__.__name__ + "." + str(user.id)
+        self.assertIsNotNone(obj[key])
+
+    def test_reload_filestorage(self):
+        """ Test reload FileStorage function """
+        self.storage.save()
+        Root = os.path.dirname(os.path.abspath("console.py"))
+        path = os.path.join(Root, "file.json")
+        with open(path, 'r') as f:
+            lines = f.readlines()
+        try:
+            os.remove(path)
+        except Exception:
+            pass
+        self.storage.save()
+        with open(path, 'r') as f:
+            lines2 = f.readlines()
+        self.assertEqual(lines, lines2)
+        try:
+            os.remove(path)
+        except Exception:
+            pass
+        with open(path, "w") as f:
+            f.write("{}")
+        with open(path, "r") as r:
+            for line in r:
+                self.assertEqual(line, "{}")
+        self.assertIs(self.storage.reload(), None)
+
+
+class TestFileStorage(unittest.TestCase):
+    """ Test FileStorage """
+    def setUp(self):
+        """ Creates an instance before each test """
+        self.objects = FileStorage._FileStorage__objects
+        self.file_path = FileStorage._FileStorage__file_path
+
+    def test_objects(self):
+        """ Test __objects type """
         self.assertTrue(isinstance(self.objects, dict))
 
-    def test_file_path_type(self):
-        """ Check private instance type """
+    def test_file_path(self):
+        """ Test __file_path type """
         self.assertTrue(isinstance(self.file_path, str))
 
     def test_new(self):
         """ Test new function """
-        check = BaseModel()
+        model = BaseModel()
         length = len(self.objects)
-        models.storage.new(check)
+        models.storage.new(model)
         self.assertTrue(length == len(self.objects))
 
-    def test_reload_type(self):
-        """ Check reload type """
+    def test_reload(self):
+        """ Test reload function """
         self.assertTrue(isinstance(self.objects, dict))
 
     def test_all(self):
-        """ Check objects type """
+        """Test all function"""
         self.assertTrue(isinstance(self.objects, dict))
 
 
 class TestBaseModelFileStorage(unittest.TestCase):
-    """ Test BaseModel file storage """
+    """ Test BaseModel """
     def setUp(self):
         """ Creates an instance before each test """
-        self.file_path = FileStorage._FileStorage__file_path
         self.objects = FileStorage._FileStorage__objects
-        self.test = BaseModel()
-        self.test.save()
+        self.file_path = FileStorage._FileStorage__file_path
+        self.b1 = BaseModel()
+        self.b1.save()
 
-    def tearDown(self):
-        """ Deletes instance after test """
-        del self.file_path
-        del self.objects
-        del self.test
+    def test_basemodel_object_update(self):
+        """ Test update BaseModel __objects """
+        self.assertIn('BaseModel.{}'.format(self.b1.id), self.objects.keys())
 
-    def test_basemodel_update(self):
-        """ Check base model storage """
-        self.assertIn('BaseModel.{}'.format(self.test.id), self.objects.keys())
-
-    def test_basemodel_dictionary(self):
-        """ Check basemodel to dictionary """
-        dictionary = self.test.to_dict()
-        self.assertIn(dictionary, self.objects.values())
+    def test_basemodel_dict(self):
+        """ Test dict BaseModel __objects """
+        b1_dict = self.b1.to_dict()
+        self.assertIn(b1_dict, self.objects.values())
 
 
 class TestUserFileStorage(unittest.TestCase):
-    """ Test User file storage """
+    """Test User file storage"""
     def setUp(self):
         """ Creates an instance before each test """
-        self.file_path = FileStorage._FileStorage__file_path
         self.objects = FileStorage._FileStorage__objects
-        self.test = User()
-        self.test.save()
+        self.file_path = FileStorage._FileStorage__file_path
+        self.u1 = User()
+        self.u1.save()
 
-    def tearDown(self):
-        """ Deletes instance after a finished test """
-        del self.file_path
-        del self.objects
-        del self.test
-
-    def test_user_update(self):
-        """ Check user model storage """
-        self.assertIn('User.{}'.format(self.test.id), self.objects.keys())
+    def test_user_object_update(self):
+        """ Test update User __objects """
+        self.assertIn('User.{}'.format(self.u1.id), self.objects.keys())
 
     def test_user_dict(self):
-        """ Check user dicttionary function """
-        dictionary = self.test.to_dict()
-        self.assertIn(dictionary, self.objects.values())
+        """ Test dict User __objects """
+        u1_dict = self.u1.to_dict()
+        self.assertIn(u1_dict, self.objects.values())
 
 
 class TestStateFileStorage(unittest.TestCase):
-    """ Test State file storage """
+    """Test State file storage"""
     def setUp(self):
         """ Creates an instance before each test """
-        self.file_path = FileStorage._FileStorage__file_path
         self.objects = FileStorage._FileStorage__objects
-        self.test = State()
-        self.test.save()
+        self.file_path = FileStorage._FileStorage__file_path
+        self.s1 = State()
+        self.s1.save()
 
-    def tearDown(self):
-        """ Deletes instance after test """
-        del self.file_path
-        del self.objects
-        del self.test
-
-    def test_state_update(self):
-        """ Check state update """
-        self.assertIn('State.{}'.format(self.test.id), self.objects.keys())
+    def test_state_object_update(self):
+        """ Test update State __objects """
+        self.assertIn('State.{}'.format(self.s1.id), self.objects.keys())
 
     def test_state_dict(self):
-        """ Check state dicttionary function """
-        dictionary = self.test.to_dict()
-        self.assertIn(dictionary, self.objects.values())
+        """ Test dict State __objects """
+        s1_dict = self.s1.to_dict()
+        self.assertIn(s1_dict, self.objects.values())
 
 
 class TestCityFileStorage(unittest.TestCase):
-    """ Test city file storage """
+    """Test City file storage"""
     def setUp(self):
         """ Creates an instance before each test """
-        self.file_path = FileStorage._FileStorage__file_path
         self.objects = FileStorage._FileStorage__objects
-        self.test = City()
-        self.test.save()
+        self.file_path = FileStorage._FileStorage__file_path
+        self.c1 = City()
+        self.c1.save()
 
-    def tearDown(self):
-        """ Deletes instance after a finished test """
-        del self.file_path
-        del self.objects
-        del self.test
-
-    def test_city_update(self):
-        """ Check city model storage """
-        self.assertIn('City.{}'.format(self.test.id), self.objects.keys())
+    def test_city_object_update(self):
+        """ Test update City __objects """
+        self.assertIn('City.{}'.format(self.c1.id), self.objects.keys())
 
     def test_city_dict(self):
-        """ Check city dicttionary function """
-        dictionary = self.test.to_dict()
-        self.assertIn(dictionary, self.objects.values())
+        """ Test dict City __objects """
+        c1_dict = self.c1.to_dict()
+        self.assertIn(c1_dict, self.objects.values())
 
 
 class TestAmenityFileStorage(unittest.TestCase):
-    """ Test amenity file storage """
+    """Test Amenity file storage"""
     def setUp(self):
-        """ Test User file storage """
-        self.file_path = FileStorage._FileStorage__file_path
+        """ Creates an instance before each test """
         self.objects = FileStorage._FileStorage__objects
-        self.test = Amenity()
-        self.test.save()
+        self.file_path = FileStorage._FileStorage__file_path
+        self.a1 = Amenity()
+        self.a1.save()
 
-    def tearDown(self):
-        """ Deletes instance after a finished test """
-        del self.file_path
-        del self.objects
-        del self.test
-
-    def test_amenity_update(self):
-        """ Check amenity model storage """
-        self.assertIn('Amenity.{}'.format(self.test.id), self.objects.keys())
+    def test_amenity_object_update(self):
+        """ Test update Amenity __objects """
+        self.assertIn('Amenity.{}'.format(self.a1.id), self.objects.keys())
 
     def test_amenity_dict(self):
-        """ Check amenity dictionary function """
-        dictionary = self.test.to_dict()
-        self.assertIn(dictionary, self.objects.values())
+        """ Test dict Amenity __objects """
+        a1_dict = self.a1.to_dict()
+        self.assertIn(a1_dict, self.objects.values())
 
 
 class TestPlaceFileStorage(unittest.TestCase):
-    """ Test Pplace file storage """
+    """Test Place file storage"""
     def setUp(self):
         """ Creates an instance before each test """
-        self.file_path = FileStorage._FileStorage__file_path
         self.objects = FileStorage._FileStorage__objects
-        self.test = Place()
-        self.test.save()
+        self.file_path = FileStorage._FileStorage__file_path
+        self.p1 = Place()
+        self.p1.save()
 
-    def tearDown(self):
-        """ Deletes instance after a finished test """
-        del self.file_path
-        del self.objects
-        del self.test
-
-    def test_place_update(self):
-        """ Check place model storage """
-        self.assertIn('Place.{}'.format(self.test.id), self.objects.keys())
+    def test_place_object_update(self):
+        """ Test update Place __objects """
+        self.assertIn('Place.{}'.format(self.p1.id), self.objects.keys())
 
     def test_place_dict(self):
-        """ Check user dicttionary function """
-        dictionary = self.test.to_dict()
-        self.assertIn(dictionary, self.objects.values())
+        """ Test dict Place __objects """
+        p1_dict = self.p1.to_dict()
+        self.assertIn(p1_dict, self.objects.values())
 
 
 class TestReviewFileStorage(unittest.TestCase):
-    """ Test review file storage """
+    """Test Review file storage"""
     def setUp(self):
         """ Creates an instance before each test """
-        self.file_path = FileStorage._FileStorage__file_path
         self.objects = FileStorage._FileStorage__objects
-        self.test = Review()
-        self.test.save()
+        self.file_path = FileStorage._FileStorage__file_path
+        self.r1 = Review()
+        self.r1.save()
 
-    def tearDown(self):
-        """ Deletes instance after a finished test """
-        del self.file_path
-        del self.objects
-        del self.test
-
-    def test_review_update(self):
-        """ Check review model storage """
-        self.assertIn('Review.{}'.format(self.test.id), self.objects.keys())
+    def test_review_object_update(self):
+        """ Test update Review __objects """
+        self.assertIn('Review.{}'.format(self.r1.id), self.objects.keys())
 
     def test_review_dict(self):
-        """ Check user dicttionary function """
-        dictionary = self.test.to_dict()
-        self.assertIn(dictionary, self.objects.values())
+        """ Test dict Review __objects """
+        r1_dict = self.r1.to_dict()
+        self.assertIn(r1_dict, self.objects.values())

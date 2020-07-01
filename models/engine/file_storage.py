@@ -44,5 +44,5 @@ class FileStorage:
             for key, value in file_object.items():
                 kwav = eval(value['__class__'])(**value)
                 self.__objects[key] = kwav
-        except:
+        except Exception:
             pass
