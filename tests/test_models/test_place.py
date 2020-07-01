@@ -1,5 +1,6 @@
 #!/usr/bin/python3
-""" Place Model Unit Test """
+"""Unittest for class Place
+"""
 import unittest
 from datetime import datetime
 from models.base_model import BaseModel
@@ -9,29 +10,41 @@ from models.place import Place
 class TestPlace(unittest.TestCase):
     """Testing Place"""
     def setUp(self):
-        """ Creates an instance before each test """
-        self.test = Place()
+        """
+        Create a new instance of Place before each test
+        """
+        self.p1 = Place()
 
     def tearDown(self):
-        """ Deletes instance after a test """
-        del self.test
-
-    def test_id_type(self):
-        """ Check ID type """
-        self.assertEqual(type(self.test.id), str)
+        """
+        Delete Place instance before next test
+        """
+        del self.p1
 
     def test_uniqueUUID(self):
-        """ Check if generates a UUID for every instance """
-        test2 = Place()
-        self.assertNotEqual(self.test.id, test2.id)
+        """
+        Make sure each UUID is unique
+        """
+        p2 = Place()
+        self.assertNotEqual(self.p1.id, p2.id)
+
+    def test_id_type(self):
+        """
+        Make sure id is a string not uuid data type
+        """
+        self.assertEqual(type(self.p1.id), str)
 
     def test_created_at_type(self):
-        """ Check created_at type """
-        self.assertEqual(type(self.test.created_at), datetime)
+        """
+        Make sure created_at is datetime data type
+        """
+        self.assertEqual(type(self.p1.created_at), datetime)
 
     def test_updated_at_type(self):
-        """ Check updated_at type """
-        self.assertEqual(type(self.test.updated_at), datetime)
+        """
+        Make sure updated_at is datetime data type
+        """
+        self.assertEqual(type(self.p1.updated_at), datetime)
 
     def test_name_type(self):
         """
@@ -40,69 +53,98 @@ class TestPlace(unittest.TestCase):
         self.assertEqual(type(Place.name), str)
 
     def test_city_id(self):
-        """ Test city-id type """
+        """
+        Make sure city_id is str data type
+        """
         self.assertEqual(type(Place.city_id), str)
 
     def test_user_id(self):
-        """ Test user_id type """
+        """
+        Make sure user_id is str data type
+        """
         self.assertEqual(type(Place.user_id), str)
 
     def test_description(self):
-        """ Test description type """
+        """
+        Make sure description is str data type
+        """
         self.assertEqual(type(Place.description), str)
 
     def test_number_rooms(self):
-        """ Test number_rooms type """
+        """
+        Make sure number_rooms is int data type
+        """
         self.assertEqual(type(Place.number_rooms), int)
 
     def test_number_bathrooms(self):
-        """ Test number_bathrooms type """
+        """
+        Make sure number_bathrooms is int data type
+        """
         self.assertEqual(type(Place.number_bathrooms), int)
 
     def test_max_guest(self):
-        """ Test max_guest type """
+        """
+        Make sure max_guest is int data type
+        """
         self.assertEqual(type(Place.max_guest), int)
 
     def test_price_by_night(self):
-        """ Test price by nigth type """
+        """
+        Make sure price_by_night is int data type
+        """
         self.assertEqual(type(Place.price_by_night), int)
 
     def test_latitutde(self):
-        """ Test latitude type """
+        """
+        Make sure latitude is float
+        """
         self.assertEqual(type(Place.latitude), float)
 
     def test_longitude(self):
-        """ Test longitude type """
+        """
+        Make sure longitude is float
+        """
         self.assertEqual(type(Place.longitude), float)
 
     def test_amenity_ids(self):
-        """ Check amenity_ids type """
+        """
+        Make sure amenity_ids is a list
+        """
         self.assertEqual(type(Place.amenity_ids), list)
 
     def test_save(self):
-        """ Test save function """
-        check = self.test.updated_at
-        self.test.save()
-        self.assertNotEqual(check, self.test.updated_at)
+        """
+        Make sure save does update the updated_at attribute
+        """
+        old_updated_at = self.p1.updated_at
+        self.p1.save()
+        self.assertNotEqual(old_updated_at, self.p1.updated_at)
 
     def test_str(self):
-        """ Check __str__ return """
-        self.assertEqual(str(self.test), "[Place] ({}) {}".
-                         format(self.test.id, self.test.__dict__))
+        """
+        Testing return of __str__
+        """
+        self.assertEqual(str(self.p1), "[Place] ({}) {}".
+                         format(self.p1.id, self.p1.__dict__))
 
-    def test_dictionary(self):
-        """ Check to_dict function """
-        dictionary = self.test.to_dict()
-        self.assertEqual(type(dictionary), dict)
-        self.assertTrue(hasattr(dictionary, '__class__'))
-        self.assertEqual(type(dictionary['created_at']), str)
-        self.assertEqual(type(dictionary['updated_at']), str)
+    def test_to_dict(self):
+        """
+        Make sure to_dict returns the right dictionary
+        and the dict has the right attributes with the right types.
+        """
+        model_json = self.p1.to_dict()
+        self.assertEqual(type(model_json), dict)
+        self.assertTrue(hasattr(model_json, '__class__'))
+        self.assertEqual(type(model_json['created_at']), str)
+        self.assertEqual(type(model_json['updated_at']), str)
 
     def test_kwargs(self):
-        """ Validate kawrgs arguments """
-        dictionary = self.test.to_dict()
-        test2 = Place(**dictionary)
-        self.assertEqual(self.test.id, test2.id)
-        self.assertEqual(self.test.created_at, test2.created_at)
-        self.assertEqual(self.test.updated_at, test2.updated_at)
-        self.assertNotEqual(self.test, test2)
+        """
+        Test passing kwargs to Place instantation
+        """
+        json_dict = self.p1.to_dict()
+        p2 = Place(**json_dict)
+        self.assertEqual(self.p1.id, p2.id)
+        self.assertEqual(self.p1.created_at, p2.created_at)
+        self.assertEqual(self.p1.updated_at, p2.updated_at)
+        self.assertNotEqual(self.p1, p2)

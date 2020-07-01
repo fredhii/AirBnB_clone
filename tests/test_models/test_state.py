@@ -1,5 +1,6 @@
 #!/usr/bin/python3
-""" State Model Unit Test """
+"""Unittest for class State
+"""
 import unittest
 from datetime import datetime
 from models.base_model import BaseModel
@@ -7,62 +8,83 @@ from models.state import State
 
 
 class TestState(unittest.TestCase):
-    """ Test state """
+    """Testing State"""
     def setUp(self):
-        """ Creates an instance before each test """
-        self.test = State()
+        """
+        Create a new instance of State before each test
+        """
+        self.s1 = State()
 
     def tearDown(self):
-        """ Deletes instance after a test """
-        del self.test
+        """
+        Delete State instance before next test
+        """
+        del self.s1
+
+    def test_uniqueUUID(self):
+        """
+        Make sure each UUID is unique
+        """
+        s2 = State()
+        self.assertNotEqual(self.s1.id, s2.id)
 
     def test_id_type(self):
-        """ Check ID type """
-        self.assertEqual(type(self.test.id), str)
-
-    def test_unique_id(self):
-        """ Check if generates a UUID for every instance """
-        test2 = State()
-        self.assertNotEqual(self.test.id, test2.id)
+        """
+        Make sure id is a string not uuid data type
+        """
+        self.assertEqual(type(self.s1.id), str)
 
     def test_created_at_type(self):
-        """ Check created_at type """
-        self.assertEqual(type(self.test.created_at), datetime)
+        """
+        Make sure created_at is datetime data type
+        """
+        self.assertEqual(type(self.s1.created_at), datetime)
 
     def test_updated_at_type(self):
-        """ Check updated_at type """
-        self.assertEqual(type(self.test.updated_at), datetime)
+        """
+        Make sure updated_at is datetime data type
+        """
+        self.assertEqual(type(self.s1.updated_at), datetime)
 
     def test_name_type(self):
-        """ Check state name type """
+        """
+        Make sure name is str data type
+        """
         self.assertEqual(type(State.name), str)
 
     def test_save(self):
-        """ Test save function """
-        check = self.test.updated_at
-        self.test.save()
-        self.assertNotEqual(check, self.test.updated_at)
+        """
+        Make sure save does update the updated_at attribute
+        """
+        old_updated_at = self.s1.updated_at
+        self.s1.save()
+        self.assertNotEqual(old_updated_at, self.s1.updated_at)
 
     def test_str(self):
-        """ Check __str__ return """
-        self.assertEqual(str(self.test),
-                         "[State] ({}) {}".
-                         format(self.test.id,
-                                self.test.__dict__))
+        """
+        Testing return of __str__
+        """
+        self.assertEqual(str(self.s1), "[State] ({}) {}".
+                         format(self.s1.id, self.s1.__dict__))
 
-    def test_dictionary(self):
-        """ Check to_dict function """
-        dictionary = self.test.to_dict()
-        self.assertEqual(type(dictionary), dict)
-        self.assertTrue(hasattr(dictionary, '__class__'))
-        self.assertEqual(type(dictionary['created_at']), str)
-        self.assertEqual(type(dictionary['updated_at']), str)
+    def test_to_dict(self):
+        """
+        Make sure to_dict returns the right dictionary
+        and the dict has the right attributes with the right types.
+        """
+        model_json = self.s1.to_dict()
+        self.assertEqual(type(model_json), dict)
+        self.assertTrue(hasattr(model_json, '__class__'))
+        self.assertEqual(type(model_json['created_at']), str)
+        self.assertEqual(type(model_json['updated_at']), str)
 
     def test_kwargs(self):
-        """ Validate kawrgs arguments """
-        dictionary = self.test.to_dict()
-        test2 = State(**dictionary)
-        self.assertEqual(self.test.id, test2.id)
-        self.assertEqual(self.test.created_at, test2.created_at)
-        self.assertEqual(self.test.updated_at, test2.updated_at)
-        self.assertNotEqual(self.test, test2)
+        """
+        Test passing kwargs to State instantation
+        """
+        json_dict = self.s1.to_dict()
+        s2 = State(**json_dict)
+        self.assertEqual(self.s1.id, s2.id)
+        self.assertEqual(self.s1.created_at, s2.created_at)
+        self.assertEqual(self.s1.updated_at, s2.updated_at)
+        self.assertNotEqual(self.s1, s2)
