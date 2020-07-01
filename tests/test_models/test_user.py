@@ -1,76 +1,80 @@
 #!/usr/bin/python3
-"""test for user"""
+""" User Model Unit Test """
 import unittest
-import os
-from models.user import User
+from datetime import datetime
 from models.base_model import BaseModel
-import pep8
+from models.user import User
 
 
-class TestUser(unittest.TestCase):
-    """this will test the User class"""
-
-    @classmethod
-    def setUpClass(cls):
-        """set up for test"""
-        cls.user = User()
-        cls.user.first_name = "Kevin"
-        cls.user.last_name = "Yook"
-        cls.user.email = "yook00627@gmamil.com"
-        cls.user.password = "secret"
-
-    @classmethod
-    def teardown(cls):
-        """at the end of the test this will tear it down"""
-        del cls.user
+class TestUserModel(unittest.TestCase):
+    """ Test User """
+    def setUp(self):
+        """ Creates an instance before each test """
+        self.test = User()
 
     def tearDown(self):
-        """teardown"""
-        try:
-            os.remove("file.json")
-        except Exception:
-            pass
+        """ Deletes instance after a test """
+        del self.test
 
-    def test_pep8_User(self):
-        """Tests pep8 style"""
-        style = pep8.StyleGuide(quiet=True)
-        p = style.check_files(['models/user.py'])
-        self.assertEqual(p.total_errors, 0, "fix pep8")
+    def test_id_type(self):
+        """ Check ID type """
+        self.assertEqual(type(self.test.id), str)
 
-    def test_checking_for_docstring_User(self):
-        """checking for docstrings"""
-        self.assertIsNotNone(User.__doc__)
+    def test_unique_id(self):
+        """ Check if generates a UUID for every instance """
+        test2 = User()
+        self.assertNotEqual(self.test.id, test2.id)
 
-    def test_attributes_User(self):
-        """chekcing if User have attributes"""
-        self.assertTrue('email' in self.user.__dict__)
-        self.assertTrue('id' in self.user.__dict__)
-        self.assertTrue('created_at' in self.user.__dict__)
-        self.assertTrue('updated_at' in self.user.__dict__)
-        self.assertTrue('password' in self.user.__dict__)
-        self.assertTrue('first_name' in self.user.__dict__)
-        self.assertTrue('last_name' in self.user.__dict__)
+    def test_created_at_type(self):
+        """ Check created_at type """
+        self.assertEqual(type(self.test.created_at), datetime)
 
-    def test_is_subclass_User(self):
-        """test if User is subclass of Basemodel"""
-        self.assertTrue(issubclass(self.user.__class__, BaseModel), True)
+    def test_updated_at_type(self):
+        """ Check updated_at type """
+        self.assertEqual(type(self.test.updated_at), datetime)
 
-    def test_attribute_types_User(self):
-        """test attribute type for User"""
-        self.assertEqual(type(self.user.email), str)
-        self.assertEqual(type(self.user.password), str)
-        self.assertEqual(type(self.user.first_name), str)
-        self.assertEqual(type(self.user.first_name), str)
+    def test_email_type(self):
+        """ Test email type """
+        self.assertEqual(type(User.email), str)
 
-    def test_save_User(self):
-        """test if the save works"""
-        self.user.save()
-        self.assertNotEqual(self.user.created_at, self.user.updated_at)
+    def test_password_type(self):
+        """ Check password type """
+        self.assertEqual(type(User.password), str)
 
-    def test_to_dict_User(self):
-        """test if dictionary works"""
-        self.assertEqual('to_dict' in dir(self.user), True)
+    def test_first_name_type(self):
+        """ Check first name type """
+        self.assertEqual(type(User.first_name), str)
 
+    def test_last_name_type(self):
+        """ Check last name type """
+        self.assertEqual(type(User.last_name), str)
 
-if __name__ == "__main__":
-    unittest.main()
+    def test_save(self):
+        """ Test save function """
+        check = self.test.updated_at
+        self.test.save()
+        self.assertNotEqual(check, self.test.updated_at)
+
+    def test_str(self):
+        """ Check __str__ return """
+        self.assertEqual(str(self.test),
+                         "[User] ({}) {}".
+                         format(self.test.id,
+                                self.test.__dict__))
+
+    def test_dictionary(self):
+        """ Check to_dict function """
+        dictionary = self.test.to_dict()
+        self.assertEqual(type(dictionary), dict)
+        self.assertTrue(hasattr(dictionary, '__class__'))
+        self.assertEqual(type(dictionary['created_at']), str)
+        self.assertEqual(type(dictionary['updated_at']), str)
+
+    def test_kwargs(self):
+        """ Validate kawrgs arguments """
+        dictionary = self.test.to_dict()
+        test2 = User(**dictionary)
+        self.assertEqual(self.test.id, test2.id)
+        self.assertEqual(self.test.created_at, test2.created_at)
+        self.assertEqual(self.test.updated_at, test2.updated_at)
+        self.assertNotEqual(self.test, test2)
