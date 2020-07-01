@@ -45,8 +45,10 @@ class TestAmenityFunctionality(unittest.TestCase):
 
     def test_str(self):
         """ Check __str__ return """
-        self.assertEqual(str(self.c1), "[Amenity] ({}) {}".
-                         format(self.c1.id, self.c1.__dict__))
+        self.assertEqual(str(self.test),
+                         "[Amenity] ({}) {}".
+                         format(self.test.id,
+                                self.test.__dict__))
 
     def test_dictionary(self):
         """ Check to_dict function """

@@ -49,8 +49,10 @@ class TestCityModel(unittest.TestCase):
 
     def test_str(self):
         """ Check __str__ return """
-        self.assertEqual(str(self.test), "[City] ({}) {}".
-                         format(self.test.id, self.test.__dict__))
+        self.assertEqual(str(self.test),
+                         "[City] ({}) {}".
+                         format(self.test.id,
+                                self.test.__dict__))
 
     def test_dictionary(self):
         """ Check to_dict function """

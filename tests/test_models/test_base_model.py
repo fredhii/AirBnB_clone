@@ -40,8 +40,10 @@ class TestBaseFunctionality(unittest.TestCase):
 
     def test_str(self):
         """ Check __str__ return """
-        self.assertEqual(str(self.c1), "[BaseModel] ({}) {}".
-                         format(self.c1.id, self.c1.__dict__))
+        self.assertEqual(str(self.test),
+                         "[BaseModel] ({}) {}".
+                         format(self.test.id,
+                                self.test.__dict__))
 
     def test_to_dict(self):
         """ Check dictionary function """
@@ -55,7 +57,14 @@ class TestBaseFunctionality(unittest.TestCase):
         """ Send kwargs to instance """
         dictionary = self.test.to_dict()
         test2 = BaseModel(**dictionary)
-        self.assertEqual(self.test.id, test2.id)
-        self.assertEqual(self.test.created_at, test2.created_at)
-        self.assertEqual(self.test.updated_at, test2.updated_at)
+        self.assertEqual(self.test.id,
+                         test2.id)
+        self.assertEqual(self.test.created_at,
+                         test2.created_at)
+        self.assertEqual(self.test.updated_at,
+                         test2.updated_at)
         self.assertNotEqual(self.test, test2)
+
+
+if __name__ == "__main__":
+    unittest.main()
