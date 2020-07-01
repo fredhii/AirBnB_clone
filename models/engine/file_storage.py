@@ -38,7 +38,7 @@ class FileStorage:
             with open(self.__file_path, "r") as f:
                 file_object = json.load(f)
             for key, value in file_object.items():
-                kwav =  eval(value['__class__'])(**value)
+                kwav = eval(value['__class__'])(**value)
                 self.__objects[key] = kwav
         except Exception:
             pass
