@@ -1,8 +1,69 @@
 #!/usr/bin/python3
 """ Base Model Unit Test """
 import unittest
+import os
+import pep8
 from datetime import datetime
 from models.base_model import BaseModel
+
+
+class TestDocumentation(unittest.TestCase):
+    """ Test BaseModel Documentation """
+
+    @classmethod
+    def setUpClass(cls):
+        """ Creates an instance before each test """
+        cls.base = BaseModel()
+        cls.base.name = "Utest"
+        cls.base.num = 77
+
+    @classmethod
+    def teardown(cls):
+        """ Deletes instance after test """
+        del cls.base
+
+    def tearDown(self):
+        """ Deletes file after test """
+        try:
+            os.remove("file.json")
+        except Exception:
+            pass
+
+    def test_pep8_BaseModel(self):
+        """ Tests pep8 """
+        style = pep8.StyleGuide(quiet=True)
+        p = style.check_files(['models/base_model.py'])
+        self.assertEqual(p.total_errors, 0, "fix pep8")
+
+    def test_checking_for_docstring_BaseModel(self):
+        """ Test docstring """
+        self.assertIsNotNone(BaseModel.__doc__)
+        self.assertIsNotNone(BaseModel.__init__.__doc__)
+        self.assertIsNotNone(BaseModel.__str__.__doc__)
+        self.assertIsNotNone(BaseModel.save.__doc__)
+        self.assertIsNotNone(BaseModel.to_dict.__doc__)
+
+    def test_method_BaseModel(self):
+        """ Test BaseModel methods """
+        self.assertTrue(hasattr(BaseModel, "__init__"))
+        self.assertTrue(hasattr(BaseModel, "save"))
+        self.assertTrue(hasattr(BaseModel, "to_dict"))
+
+    def test_init_BaseModel(self):
+        """ Check BaseModel instance """
+        self.assertTrue(isinstance(self.base, BaseModel))
+
+    def test_save_BaseModel(self):
+        """ Test BaseModel save function """
+        self.base.save()
+        self.assertNotEqual(self.base.created_at, self.base.updated_at)
+
+    def test_to_dict_BaseModel(self):
+        """ test BaseModel to dict function """
+        base_dict = self.base.to_dict()
+        self.assertEqual(self.base.__class__.__name__, 'BaseModel')
+        self.assertIsInstance(base_dict['created_at'], str)
+        self.assertIsInstance(base_dict['updated_at'], str)
 
 
 class TestBaseFunctionality(unittest.TestCase):

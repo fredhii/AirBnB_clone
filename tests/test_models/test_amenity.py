@@ -1,9 +1,67 @@
 #!/usr/bin/python3
 """ Amenity Model Unit Test """
 import unittest
+import os
+import pep8
 from datetime import datetime
 from models.base_model import BaseModel
 from models.amenity import Amenity
+
+
+class TestDocumentation(unittest.TestCase):
+    """ Test Amenity Documentation """
+
+    @classmethod
+    def setUpClass(cls):
+        """ Creates an instance before each test """
+        cls.amenity = Amenity()
+        cls.amenity.name = "Utest"
+
+    @classmethod
+    def teardown(cls):
+        """ Deletes instance after test """
+        del cls.amenity
+
+    def tearDown(self):
+        """ Deletes file after test """
+        try:
+            os.remove("file.json")
+        except Exception:
+            pass
+
+    def test_pep8_Amenity(self):
+        """ Tests pep8 """
+        style = pep8.StyleGuide(quiet=True)
+        p = style.check_files(['models/amenity.py'])
+        self.assertEqual(p.total_errors, 0, "fix pep8")
+
+    def test_checking_for_docstring_Amenity(self):
+        """ Test docstring """
+        self.assertIsNotNone(Amenity.__doc__)
+
+    def test_attributes_Amenity(self):
+        """ Test Amenity attributes """
+        self.assertTrue('id' in self.amenity.__dict__)
+        self.assertTrue('created_at' in self.amenity.__dict__)
+        self.assertTrue('updated_at' in self.amenity.__dict__)
+        self.assertTrue('name' in self.amenity.__dict__)
+
+    def test_is_subclass_Amenity(self):
+        """ Test Amenity subclass """
+        self.assertTrue(issubclass(self.amenity.__class__, BaseModel), True)
+
+    def test_attribute_types_Amenity(self):
+        """ Test Amenity types """
+        self.assertEqual(type(self.amenity.name), str)
+
+    def test_save_Amenity(self):
+        """ Test save """
+        self.amenity.save()
+        self.assertNotEqual(self.amenity.created_at, self.amenity.updated_at)
+
+    def test_to_dict_Amenity(self):
+        """ Test to dict """
+        self.assertEqual('to_dict' in dir(self.amenity), True)
 
 
 class TestAmenityFunctionality(unittest.TestCase):
@@ -13,7 +71,7 @@ class TestAmenityFunctionality(unittest.TestCase):
         self.test = Amenity()
 
     def tearDown(self):
-        """ Deletes instance after a test """
+        """ Deletes instance after test """
         del self.test
 
     def test_id_type(self):
@@ -66,3 +124,7 @@ class TestAmenityFunctionality(unittest.TestCase):
         self.assertEqual(self.test.created_at, test2.created_at)
         self.assertEqual(self.test.updated_at, test2.updated_at)
         self.assertNotEqual(self.test, test2)
+
+
+if __name__ == "__main__":
+    unittest.main()

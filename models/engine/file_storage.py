@@ -1,8 +1,5 @@
 #!/usr/bin/python3
-"""
-All the content of the FileStorage class
-"""
-
+""" All the content of the FileStorage class """
 import json
 from models.base_model import BaseModel
 from models.user import User
@@ -15,7 +12,6 @@ from models.review import Review
 
 class FileStorage:
     """The filestorage class"""
-
     __file_path = "file.json"
     __objects = {}
 
@@ -25,7 +21,7 @@ class FileStorage:
 
     def new(self, obj):
         """Sets in __objects the obj with key <obj class name>.id"""
-        key = obj.__class__.__name__ + "." + obj.id
+        key = obj.__class__.__name__ + "." + str(obj.id)
         self.__objects[key] = obj
 
     def save(self):
